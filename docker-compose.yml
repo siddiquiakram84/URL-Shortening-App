@@ -71,6 +71,3 @@ volumes:
         driver: local
     sail-redis:
         driver: local
-
-
-
