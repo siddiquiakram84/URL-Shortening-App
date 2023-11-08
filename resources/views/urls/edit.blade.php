@@ -1,5 +1,14 @@
 <x-app-layout>
     <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+    @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <form method="POST" action="{{ route('urls.update', $url) }}">
             @csrf
             @method('patch')
@@ -24,6 +33,7 @@
             <div class="mt-4 space-x-2">
                 <x-primary-button>{{ __('Save') }}</x-primary-button>
                 <a href="{{ route('urls.index') }}">{{ __('Cancel') }}</a>
+
             </div>
         </form>
     </div>

@@ -8,29 +8,35 @@ use Illuminate\Database\Eloquent\Model;
 class UrlAnalytics extends Model
 {
     use HasFactory;
-}
-public function url()
-{
-    return $this->belongsTo(Url::class);
-}
-public function shorten($code)
-{
-    $url = Url::where('code', $code)->firstOrFail();
 
-    // Redirect the user
+    protected $fillable = [
+        'url_id',
+        'user_agent',
+        'ip_address',
+        'access_date',
+        'access_count'
+    ];
 
-    UrlAnalytics::create([
-        'url_id' => $url->id,
-        'user_agent' => request()->header('User-Agent'),
-        'ip_address' => request()->ip(),
-    ]);
+    public function url()
+    {
+        return $this->belongsTo(Url::class);
+    }
 
-    return redirect($url->original_url);
-}
-public function showAnalytics($code)
-{
-    $url = Url::where('code', $code)->firstOrFail();
-    $analytics = $url->analytics;
+    public static function trackAnalytics($urlId)
+    {
+        $urlAnalytics = self::where('url_id', $urlId)
+            ->whereDate('access_date', now()->toDateString())
+            ->first();
 
-    return view('url.analytics', compact('url', 'analytics'));
+        if (!$urlAnalytics) {
+            $urlAnalytics = new UrlAnalytics();
+            $urlAnalytics->url_id = $urlId;
+            $urlAnalytics->access_date = now()->toDateString();
+        }
+
+        $urlAnalytics->user_agent = request()->header('User-Agent');
+        $urlAnalytics->ip_address = request()->ip();
+        $urlAnalytics->access_count++;
+        $urlAnalytics->save();
+    }
 }
