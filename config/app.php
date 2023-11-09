@@ -163,6 +163,8 @@ return [
         /*
          * Application Service Providers...
          */
+        
+        ConsoleTVs\Charts\ChartsServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
@@ -170,7 +172,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
-        ConsoleTVs\Charts\ChartsServiceProvider::class,
     ])->toArray(),
 
     /*

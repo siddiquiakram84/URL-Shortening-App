@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Hash;
 use App\Models\Url;
 use App\Models\Click;
 use Illuminate\Support\Str;
@@ -48,7 +49,22 @@ class UrlController extends Controller
         $data['user_id'] = Auth::user()->id;
         $data['title'] = Str::ucfirst($request->title);
         $data['original_url'] = $request->original_url;
-        $data['shortener_url'] = Str::random(5);
+        // $data['shortener_url'] = Str::random(5);
+        $unique = false;
+
+        do {
+            $randomString = substr(Hash::make(Str::random(40)), 7, 5);
+
+            // Check if the random string already exists in the database
+            $exists = Url::where('shortener_url', $randomString)->exists();
+
+            if (!$exists) {
+                $unique = true;
+            }
+
+        } while (!$unique);
+
+        $data['shortener_url'] = $randomString;
         Url::create($data);
         return redirect(route('urls.index'));
     }
@@ -90,7 +106,22 @@ class UrlController extends Controller
             'title' => 'required|string|max:255',
             'original_url' => 'required|string|max:255',
         ]);
-        $validated['shortener_url'] = Str::random(5);
+        // $validated['shortener_url'] = Str::random(5);
+        $unique = false;
+
+        do {
+            $randomString = substr(Hash::make(Str::random(40)), 7, 5);
+
+            // Check if the random string already exists in the database
+            $exists = Url::where('shortener_url', $randomString)->exists();
+
+            if (!$exists) {
+                $unique = true;
+            }
+
+        } while (!$unique);
+
+        $data['shortener_url'] = $randomString;
         $url->update($validated);
         return redirect(route('urls.index'));
     }

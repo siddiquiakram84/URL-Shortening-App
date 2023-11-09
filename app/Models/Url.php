@@ -21,4 +21,8 @@ class Url extends Model
     {
         return $this->hasMany(Click::class);
     }
+    public function analytics()
+    {
+        return $this->hasMany(UrlAnalytics::class);
+    }
 }

@@ -2,31 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use ConsoleTVs\Charts\Facades\Charts;
-use Illuminate\Http\Request;
+use App\Charts\SampleChart;
 use App\Models\Url;
 use App\Models\UrlAnalytics;
+use Charts;
 
 class AnalyticsController extends Controller
 {
     public function showAnalytics($code)
     {
-        $url = Url::where('shortener_url', $code)->firstOrFail(); // Updated to use 'shortener_url' column
+        $url = Url::where('shortener_url', $code)->firstOrFail();
         $analytics = $url->analytics;
+        $dates = $analytics->pluck('access_date')->toArray();
+        $count = $analytics->pluck('access_count')->toArray();
 
-        $chart = Charts::database($analytics, 'bar', 'highcharts')
-            ->title('URL Access Analytics')
-            ->elementLabel('Access Count')
-            ->dimensions(1000, 500)
-            ->responsive(true)
-            ->groupBy('access_date');
+        $sample_chart = new SampleChart();
+        $sample_chart->labels($dates);
+        $sample_chart->dataset('Access Count', 'bar', $count);
 
-        return view('url.analytics', compact('url', 'analytics', 'chart'));
+        return view('urls.analytics', compact('url', 'analytics', 'sample_chart'));
     }
 
     public function trackAnalytics($code)
     {
-        $url = Url::where('shortener_url', $code)->firstOrFail(); // Updated to use 'shortener_url' column
+        $url = Url::where('shortener_url', $code)->firstOrFail();
 
         UrlAnalytics::create([
             'url_id' => $url->id,

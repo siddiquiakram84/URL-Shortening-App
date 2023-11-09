@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('url_id');
             $table->string('user_agent')->nullable();
             $table->string('ip_address')->nullable();
-            $table->date('access_date'); // Added access date column
+            $table->date('access_date')->nullable(); // Added access date column
             $table->integer('access_count')->default(0); // Added access count column
             $table->timestamps();
 
