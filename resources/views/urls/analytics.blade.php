@@ -9,7 +9,7 @@
 <body>
     <h1>Analytics for {{ $url->original_url }}</h1>
 
-    <p>Total Accesses: {{ $url_analytics->count() }}</p>
+    <p>Total Accesses: {{ $analytics->count() }}</p>
 
     <!-- Create a canvas element for the chart -->
     <canvas id="analyticsChart" width="400" height="200"></canvas>
