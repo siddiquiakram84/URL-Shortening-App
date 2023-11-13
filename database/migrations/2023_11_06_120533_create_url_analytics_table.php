@@ -4,30 +4,25 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateAnalyticsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('url_analytics', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('url_id');
-            $table->string('user_agent')->nullable();
-            $table->string('ip_address')->nullable();
-            $table->date('access_date')->nullable(); // Added access date column
-            $table->integer('access_count')->default(0); // Added access count column
+            $table->text('user_agent')->nullable();
+            $table->ipAddress('ip_address')->nullable();
+            $table->date('access_date');
+            $table->integer('access_count')->default(0);
             $table->timestamps();
 
+            // Add foreign key constraint if needed
             $table->foreign('url_id')->references('id')->on('urls')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('url_analytics');
     }
