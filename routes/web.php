@@ -34,7 +34,7 @@ Route::resource('urls', UrlController::class)
 Route::get('{shortener_url}', [UrlController::class, 'shortenLink'])->name('shortener-url');
 
 // Route for Tracking Analytics
-Route::get('/analytics/{urlId}', [UrlController::class, 'showAnalytics'])->name('analytics.show');
+Route::get('/analytics/{urlId}', [UrlController::class, 'showAnalytics'])->name('analytics');
 
 
 Route::middleware('auth')->group(function () {
