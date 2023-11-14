@@ -5,17 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class  UrlAnalytics extends Model
+class Analytics extends Model
 {
     use HasFactory;
-    protected $table = 'url_analytics';
 
     protected $fillable = [
-        'url_id',
-        'user_agent',
-        'ip_address',
-        'access_date',
-        'access_count'
+        'url_id', 'user_agent', 'ip_address'
     ];
 
     public function url()

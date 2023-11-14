@@ -33,11 +33,9 @@ Route::resource('urls', UrlController::class)
 // route for get shortener url
 Route::get('{shortener_url}', [UrlController::class, 'shortenLink'])->name('shortener-url');
 
-// Route for Viewing Analytics
-Route::get('/analytics/{code}', [AnalyticsController::class, 'showAnalytics']);
-
 // Route for Tracking Analytics
-Route::get('/track-analytics/{code}', [AnalyticsController::class, 'trackAnalytics']);
+Route::get('/analytics/{urlId}', [UrlController::class, 'showAnalytics'])->name('analytics.show');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

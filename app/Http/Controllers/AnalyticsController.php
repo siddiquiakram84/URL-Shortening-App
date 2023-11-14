@@ -10,25 +10,13 @@ use Charts;
 
 class AnalyticsController extends Controller
 {
-    public function showAnalytics(Request $request, $code)
-    {
-        $url = Url::where('shortener_url', $code)->firstOrFail();
-        $analytics = $url->analytics;
-        dd($analytics);
-        if (!$analytics) {
-            // If the URL with the given code is not found, return a meaningful message
-            return response()->view('errors.404', [], 404);
-        }
-        // ddd($analytics);
-        $dates = $analytics->pluck('access_date')->toArray();
-        $count = $analytics->pluck('access_count')->toArray();
+    public function showAnalytics($urlId)
+{
+    $url = Url::with('analytics')->find($urlId);
 
-        $sample_chart = new SampleChart();
-        $sample_chart->labels($dates);
-        $sample_chart->dataset('Access Count', 'bar', $count);
-        // dd($analytics);
-        return view('urls.analytics', compact('url', 'analytics', 'sample_chart'));
-    }
+    return view('analytics', ['url' => $url]);
+}
+
 
     public function trackAnalytics($code)
     {

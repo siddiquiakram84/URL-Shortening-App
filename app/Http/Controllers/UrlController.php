@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Analytics;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Url;
 use App\Models\Click;
@@ -49,20 +50,19 @@ class UrlController extends Controller
         $data['user_id'] = Auth::user()->id;
         $data['title'] = Str::ucfirst($request->title);
         $data['original_url'] = $request->original_url;
-        // $data['shortener_url'] = Str::random(5);
-        $unique = false;
+        $maxAttempts = 5;
+        $attempts = 0;
 
         do {
-            $randomString = substr(Hash::make(Str::random(40)), 7, 5);
-
-            // Check if the random string already exists in the database
+            $randomString = Str::random(5);
             $exists = Url::where('shortener_url', $randomString)->exists();
+            $attempts++;
+        } while ($exists && $attempts < $maxAttempts);
 
-            if (!$exists) {
-                $unique = true;
-            }
-
-        } while (!$unique);
+        if ($attempts === $maxAttempts) {
+            return redirect()->back()->with('error', 'Unable to generate a unique short URL after '.$maxAttempts.' attempts. Please try again.');
+        }
+        // $randomString = Str::random(5);
 
         $data['shortener_url'] = $randomString;
         Url::create($data);
@@ -106,22 +106,8 @@ class UrlController extends Controller
             'title' => 'required|string|max:255',
             'original_url' => 'required|string|max:255',
         ]);
-        // $validated['shortener_url'] = Str::random(5);
-        $unique = false;
+        $validated['shortener_url'] = Str::random(5);
 
-        do {
-            $randomString = substr(Hash::make(Str::random(40)), 7, 5);
-
-            // Check if the random string already exists in the database
-            $exists = Url::where('shortener_url', $randomString)->exists();
-
-            if (!$exists) {
-                $unique = true;
-            }
-
-        } while (!$unique);
-
-        $data['shortener_url'] = $randomString;
         $url->update($validated);
         return redirect(route('urls.index'));
     }
@@ -140,7 +126,26 @@ class UrlController extends Controller
 
     public function shortenLink($shortener_url)
     {
-        $find = Url::where('shortener_url', $shortener_url)->first();
-        return redirect($find->original_url);
-    }
+    $url = Url::where('shortener_url', $shortener_url)->first();
+
+    // Record analytics data
+    $analyticsData = [
+        'url_id' => $url->id,
+        'user_agent' => request()->header('User-Agent'),
+        'ip_address' => request()->ip(),
+    ];
+
+    Analytics::create($analyticsData);
+
+    // Redirect to the original URL
+    return redirect($url->original_url);
+}
+    // UrlController.php
+public function showAnalytics($urlId)
+{
+    $url = Url::with('analytics')->find($urlId);
+
+    return view('analytics', ['url' => $url]);
+}
+
 }
