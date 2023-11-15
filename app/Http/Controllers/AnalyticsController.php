@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Charts\SampleChart;
 use App\Models\Url;
-use App\Models\UrlAnalytics;
+use App\Models\Analytics;
 use Charts;
 
 class AnalyticsController extends Controller
@@ -22,7 +22,7 @@ class AnalyticsController extends Controller
     {
         $url = Url::where('shortener_url', $code)->firstOrFail();
 
-        UrlAnalytics::create([
+        Analytics::create([
             'url_id' => $url->id,
             'user_agent' => request()->header('User-Agent'),
             'ip_address' => request()->ip(),

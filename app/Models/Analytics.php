@@ -25,7 +25,7 @@ class Analytics extends Model
             ->first();
 
         if (!$urlAnalytics) {
-            $urlAnalytics = new UrlAnalytics();
+            $urlAnalytics = new Analytics();
             $urlAnalytics->url_id = $urlId;
             $urlAnalytics->access_date = now()->toDateString();
         }
