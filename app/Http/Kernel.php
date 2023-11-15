@@ -67,4 +67,9 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
+
+    protected $routeMiddleware = [
+        // Other middleware entries
+        'track.url.click' => \App\Http\Middleware\TrackUrlClickMiddleware::class,
+    ];
 }

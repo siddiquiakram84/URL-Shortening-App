@@ -2,32 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Charts\SampleChart;
 use App\Models\Url;
-use App\Models\UrlAnalytics;
+use App\Models\Analytics;
 use Charts;
 
 class AnalyticsController extends Controller
 {
-    public function showAnalytics($code)
-    {
-        $url = Url::where('shortener_url', $code)->firstOrFail();
-        $analytics = $url->analytics;
-        $dates = $analytics->pluck('access_date')->toArray();
-        $count = $analytics->pluck('access_count')->toArray();
+    public function showAnalytics($urlId)
+{
+    $url = Url::with('analytics')->find($urlId);
 
-        $sample_chart = new SampleChart();
-        $sample_chart->labels($dates);
-        $sample_chart->dataset('Access Count', 'bar', $count);
+    return view('analytics', ['url' => $url]);
+}
 
-        return view('urls.analytics', compact('url', 'analytics', 'sample_chart'));
-    }
 
     public function trackAnalytics($code)
     {
         $url = Url::where('shortener_url', $code)->firstOrFail();
 
-        UrlAnalytics::create([
+        Analytics::create([
             'url_id' => $url->id,
             'user_agent' => request()->header('User-Agent'),
             'ip_address' => request()->ip(),
