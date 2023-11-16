@@ -11,11 +11,31 @@
                 <input type="text" id="title" name="title" required maxlength="255" placeholder="{{ __('Enter a title') }}" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-indigo-300 transition-all duration-300 ease-in-out transform hover:scale-103" value="{{ old('title') }}" />
                 <x-input-error :messages="$errors->store->get('title')" class="mt-2" />
             </div>
-            <div class="mb-4">
+            <!-- <div class="mb-4">
                 <label for="original_url" class="block text-sm font-bold font-poppins text-gray-600">{{ __('Original URL') }}</label>
                 <input type="text" id="original_url" name="original_url" required maxlength="255" placeholder="{{ __('Enter the original URL') }}" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-indigo-300 transition-all duration-300 ease-in-out transform hover:scale-103" value="{{ old('original_url') }}" />
                 <x-input-error :messages="$errors->store->get('original_url')" class="mt-2" />
+            </div> -->
+            <div class="mb-4">
+                <label for="original_url" class="block text-sm font-bold font-poppins text-gray-600">{{ __('Original URL') }}</label>
+                <input 
+                    type="text" 
+                    id="original_url" 
+                    name="original_url" 
+                    required 
+                    maxlength="255" 
+                    placeholder="{{ __('Enter the original URL') }}" 
+                    class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-indigo-300 transition-all duration-300 ease-in-out transform hover:scale-103" 
+                    value="{{ old('original_url') }}" 
+                />
+
+                <x-input-error :messages="$errors->store->get('original_url')" class="mt-2" />
+
+                @if($errors->store->has('original_url'))
+                    <p class="text-red-500 text-sm mt-2">{{ __('Please enter a valid URL with http:// or https://') }}</p>
+                @endif
             </div>
+
             <div class="mt-6">
                 <x-primary-button class="transition-all duration-300 ease-in-out transform hover:scale-103">{{ __('Save') }}</x-primary-button>
             </div>
