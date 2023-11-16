@@ -49,33 +49,14 @@ class UrlController extends Controller
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
         $data['title'] = Str::ucfirst($request->title);
-        // $data['original_url'] = $request->original_url;
-        $originalUrl = $request->original_url;
-        // Check if the URL has a scheme (http:// or https://), if not, prepend 'https://'
-        if (!parse_url($originalUrl, PHP_URL_SCHEME)) {
-            $originalUrl = 'https://' . $originalUrl;
-        }
-        
-        // Check if the URL contains a common domain extension, if not, add ".com"
-        $domainExtensions = ['.com', '.in', '.org'];
-        $containsExtension = false;
-
-        foreach ($domainExtensions as $extension) {
-            if (strpos($originalUrl, $extension) !== false) {
-                $containsExtension = true;
-                break;
-            }
-        }
-
-        if (!$containsExtension) {
-            $originalUrl .= '.com';
-        }
-        $data['original_url'] = $originalUrl;
-        $maxAttempts = 5;
-        $attempts = 0;
+        $data['original_url'] = $request->original_url;
+        // $data['shortener_url'] = Str::random(5);
+        $unique = false;
 
         do {
-            $randomString = Str::random(5);
+            $randomString = substr(Hash::make(Str::random(40)), 7, 5);
+
+            // Check if the random string already exists in the database
             $exists = Url::where('shortener_url', $randomString)->exists();
             $attempts++;
         } while ($exists && $attempts < $maxAttempts);
