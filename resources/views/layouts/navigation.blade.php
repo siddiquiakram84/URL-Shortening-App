@@ -12,13 +12,18 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <!-- <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link> -->
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-lg font-semibold text-gray-800 hover:text-blue-600 transition duration-300">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
                     {{-- Add This For URL Shortener Feature (Desktop) --}}
-                    <x-nav-link :href="route('urls.index')" :active="request()->routeIs('urls.index')">
-                        {{ __('Urls') }}
+                    <x-nav-link :href="route('urls.index')" :active="request()->routeIs('urls.index')" class="text-lg font-semibold text-gray-800 hover:text-blue-600 transition duration-300">
+                        {{ __('Short Urls') }}
                     </x-nav-link>
+
                 </div>
             </div>
 
