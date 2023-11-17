@@ -26,7 +26,7 @@
                         <table class="table-auto w-full border-collapse border">
                             <thead>
                                 <tr class="bg-gray-200">
-                                    <th class="border px-4 py-2">#</th>
+                                    <th class="border px-4 py-2">Index</th>
                                     <th class="border px-4 py-2">User Agent</th>
                                     <th class="border px-4 py-2">IP Address</th>
                                     <th class="border px-4 py-2">Timestamp</th>

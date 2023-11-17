@@ -22,13 +22,13 @@ class AnalyticsController extends Controller
     {
         $url = Url::where('shortener_url', $code)->firstOrFail();
 
-        Analytics::create([
+        $Analytics = Analytics::create([
             'url_id' => $url->id,
             'user_agent' => request()->header('User-Agent'),
             'ip_address' => request()->ip(),
             'access_date' => now()->toDateString(),
-            'access_count' => 1, // Set initial access count to 1
         ]);
+
 
         return redirect($url->original_url);
     }

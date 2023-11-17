@@ -9,9 +9,8 @@ class Analytics extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'url_id', 'user_agent', 'ip_address'
-    ];
+    protected $fillable = ['url_id', 'user_agent', 'ip_address'];
+
 
     public function url()
     {

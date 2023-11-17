@@ -23,17 +23,16 @@
     <div class="min-h-screen" style="background-image: url('{{ asset('images/wallpaper4.jpg') }}'); background-size: cover; background-position: center; height: 100vh; position: fixed; width: 100%; z-index: -1;">
     </div>
 
-    <!-- <div class="bg-gray-100"> -->
-            @include('layouts.navigation')
-        
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
+        @include('layouts.navigation')
+    
+        <!-- Page Heading -->
+        @if (isset($header))
+            <header class="bg-white shadow">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    {{ $header }}
+                </div>
+            </header>
+        @endif
 
             <!-- Page Content -->
             <main>
