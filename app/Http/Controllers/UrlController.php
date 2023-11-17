@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
 use App\Models\Analytics;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Url;
@@ -42,45 +43,30 @@ class UrlController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+
+        $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'original_url' => 'required|string|max:255',
+            'original_url' => 'required|string|max:255|sanitize_url',
         ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Bad Request', 'Message: Please enter a valid URL'], 400);
+        }
+    
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
         $data['title'] = Str::ucfirst($request->title);
-        $originalUrl = $request->original_url;
-
-        // Check if the URL has a scheme (http:// or https://), if not, prepend 'https://'
-        if (!parse_url($originalUrl, PHP_URL_SCHEME)) {
-            $originalUrl = 'https://' . $originalUrl;
-        }
+        $value = $request->original_url;
+        $url = parse_url($value, PHP_URL_SCHEME) ? $value : 'https://' . $value;
+        $data['original_url'] = $url;
         
-        // Check if the URL contains a common domain extension, if not, add ".com"
-        $domainExtensions = ['.com', '.in', '.org'];
-        $containsExtension = false;
-
-        foreach ($domainExtensions as $extension) {
-            if (strpos($originalUrl, $extension) !== false) {
-                $containsExtension = true;
-                break;
-            }
-        }
-
-        if (!$containsExtension) {
-            $originalUrl .= '.com';
-        }
-        $data['original_url'] = $originalUrl;
         $maxAttempts = 5;
         $attempts = 0;
 
         do {
             $randomString = Str::random(5);
-            $randomString = substr(Hash::make(Str::random(40)), 7, 5);
-
-            // Check if the random string already exists in the database
             $exists = Url::where('shortener_url', $randomString)->exists();
-            $maxAttempts++;
+            $attempts++;
         } while ($exists && $attempts < $maxAttempts);
 
         if ($attempts === $maxAttempts) {

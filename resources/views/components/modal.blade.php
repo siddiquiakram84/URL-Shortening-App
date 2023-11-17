@@ -47,7 +47,6 @@ $maxWidth = [
     x-show="show"
     class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50"
     style="display: {{ $show ? 'block' : 'none' }};"
->
     <div
         x-show="show"
         class="fixed inset-0 transform transition-all"
