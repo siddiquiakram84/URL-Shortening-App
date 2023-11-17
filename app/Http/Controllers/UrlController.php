@@ -46,19 +46,19 @@ class UrlController extends Controller
 
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'original_url' => 'required|string|max:255|sanitize_url',
+            'original_url' => 'required|url|max:255|',
+            'original_url' => 'required|url|has_domain_extension',
         ]);
-    
+
         if ($validator->fails()) {
-            return response()->json(['error' => 'Bad Request', 'Message: Please enter a valid URL'], 400);
+            return redirect()->back()->withErrors($validator, 'store')->withInput();
         }
     
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;
         $data['title'] = Str::ucfirst($request->title);
         $value = $request->original_url;
-        $url = parse_url($value, PHP_URL_SCHEME) ? $value : 'https://' . $value;
-        $data['original_url'] = $url;
+        $data['original_url'] = $value;
         
         $maxAttempts = 5;
         $attempts = 0;
